@@ -5,7 +5,7 @@ members = [
     "ck3oop-ui/src-tauri"]
 
 [workspace.package]
-version = "0.1.1"
+version = "0.1.2"
 publish = false
 authors = ["ck3oop", "bukowa"]
 homepage = "https://github.com/bukowa/ck3oop"
