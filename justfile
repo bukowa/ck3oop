@@ -1,3 +1,5 @@
+completion:
+    . <(just --completions bash)
 
 clippy:
     cargo clippy -- -D warnings
@@ -7,6 +9,17 @@ clippy-fix:
 
 fmt:
     cargo fmt --
+
+release-mark-latest:
+    #!/bin/bash
+    release_id=$(
+      gh release list \
+        --exclude-drafts --exclude-pre-releases \
+        -L 20 --json tagName | \
+        jq '.[] | select(.tagName | startswith("ck3oop-ui-v")) | .[]' -r | head -n1)
+    # ask for confirmation
+    read -p "Mark release $release_id as latest? [y/N] " -n 1 -r
+    gh release edit $release_id --latest
 
 #[confirm]
 #cleanup-release-please:
