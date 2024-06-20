@@ -1,6 +1,6 @@
 [package]
 name = "ck3oop-ui-rs"
-version = "0.0.3"
+version = "0.0.4"
 description = "A Tauri App"
 authors = ["you"]
 edition = "2021"
@@ -14,7 +14,7 @@ tauri-build = { version = "1", features = [] }
 tauri = { version = "1", features = [ "window-show", "shell-open"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-ck3oop-core-rs = { path = "../../ck3oop-core-rs", version = "0.1.1" }
+ck3oop-core-rs = { path = "../../ck3oop-core-rs", version = "0.1.2" }
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

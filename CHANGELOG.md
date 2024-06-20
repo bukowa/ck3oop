@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3](https://github.com/bukowa/ck3oop/compare/ck3oop-ui-v0.1.2...ck3oop-ui-v0.1.3) (2024-06-20)
+
+
+### Features
+
+* **core-rs:** Add ModLoadOrder ([0408801](https://github.com/bukowa/ck3oop/commit/0408801f3226e579461d6442b6a2c0d8b5fa3ea0))
+* **core-rs:** Add Workspace ([db21551](https://github.com/bukowa/ck3oop/commit/db21551b014a746aa898aec07cb0b43246cd20c9))
+
 ## [0.1.2](https://github.com/bukowa/ck3oop/compare/ck3oop-ui-v0.1.1...ck3oop-ui-v0.1.2) (2024-06-20)
 
 
