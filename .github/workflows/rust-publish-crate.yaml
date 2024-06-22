@@ -51,7 +51,7 @@ jobs:
           toolchain: stable
 
       - name: Setup Rust Cache
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84 # v2
         with:
           cache-all-crates: true
 
