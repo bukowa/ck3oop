@@ -66,5 +66,4 @@ jobs:
 
       - name: Run UI E2E tests
         run: |
-          just init
           just test-e2e

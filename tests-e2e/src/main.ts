@@ -1,23 +1,39 @@
 import * as path from "node:path";
 import {spawn, spawnSync} from "child_process";
 import * as os from "node:os";
-import {program} from "commander";
+import {program, Option} from "commander";
 
-program.requiredOption("-t, --tauri-app-path <path>")
-    .description("Path to the tauri app binary")
 
-program.requiredOption("-d, --tauri-driver-path <path>")
-    .description("Path to the tauri driver binary")
+program.addOption(
+    new Option(
+        "-t, --tauri_app_binary <path>",
+        "Path to the tauri app binary")
+        .env("PATH_TAURI_RELEASE_BINARY")
+)
 
-program.option("-w, --webdriver-path <path>")
-    .description("Path to the webdriver binary")
+program.addOption(
+    new Option(
+        "-d, --tauri_driver_binary <path>",
+        "Path to the tauri driver binary")
+        .env("PATH_TAURI_DRIVER_BINARY")
+)
+
+program.addOption(
+    new Option(
+        "-w, --webdriver_binary <path>",
+        "Path to the webdriver binary")
+        .env("PATH_WEBDRIVER_BINARY")
+)
+
 program.command("run")
     .description("Run the e2e tests")
     .action(() => {
+        console.log("Running e2e tests")
         console.log(program.opts())
     })
 
 program.parse(process.argv);
+
 
 function waitForMessage(process: any, message: any) {
 
@@ -47,8 +63,8 @@ function waitForMessage(process: any, message: any) {
 }
 
 let tauriDriver = spawn(
-    program.opts()['tauriDriverPath'],
-    ["--native-driver", program.opts()['webdriverPath'], "--native-port", "4566"],
+    program.opts()['tauri_driver_binary'],
+    ["--native-driver", program.opts()['webdriver_binary'], "--native-port", "4566"],
     {
         stdio: [null, "pipe", "pipe"],
         detached: false

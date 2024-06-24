@@ -4,7 +4,6 @@ members = [
     "ck3oop-core-rs",
     "ck3oop-core-rs/test_utils",
     "ck3oop-ui/src-tauri",
-    "scripts"
 ]
 
 [workspace.package]
