@@ -59,7 +59,7 @@ tauri-driver-download:
 [doc('get microsoftege version')]
 [windows]
 browser-version:
-    REG QUERY "HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}" /v pv | grep pv | awk '{print $3}'
+    REG QUERY "HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}" | grep pv | awk '{print $3}'
 
 [group('webview')]
 [doc('get the webdriver url')]
