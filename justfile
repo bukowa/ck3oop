@@ -29,6 +29,11 @@ _:
     @just --list
 
 [group('setup')]
+[doc('print info about prerequisites for the project')]
+prerequisites:
+    @echo https://tauri.app/v1/guides/getting-started/prerequisites
+
+[group('setup')]
 [doc('initialize the build tool')]
 init:
     mkdir -p $PATH_BUILD_DIR
