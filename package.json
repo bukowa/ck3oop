@@ -4,6 +4,7 @@
   "version": "0.1.2",
   "scripts": {
     "build": "npm run build --workspaces --if-present",
+    "build-incremental": "npm run --workspaces --if-present build-incremental ",
     "tauri": "npm run --workspace=ck3oop-ui tauri",
     "tauri:dev": "npm run --workspace ck3oop-ui tauri dev ",
     "tests-e2e": "npm run --workspace=tests-e2e run",

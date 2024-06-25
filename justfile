@@ -128,6 +128,14 @@ test-e2e-fast:
     ts-node tests-e2e run
 
 [group('tests')]
+[doc('builds ts projects with --incremental flag and runs e2e tests using ts-node and swc')]
+test-e2e-fast-build:
+    npm run build-incremental
+    just tauri-b-for-tests
+    just test-e2e-fast
+
+
+[group('tests')]
 [doc('run the e2e tests')]
 test-e2e: webdriver-download tauri-driver-download
     npm install

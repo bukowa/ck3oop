@@ -9,3 +9,4 @@ playground.js
 target
 .bin
 .build
+tsconfig.tsbuildinfo

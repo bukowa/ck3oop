@@ -75,15 +75,17 @@ process.on('exit', () => {
     tauriDriver.kill();
 });
 
-waitForMessage(tauriDriver, 'Microsoft Edge WebDriver was started successfully.')
-    .then(() => {
-        console.log('WebDriver started successfully.');
-    })
-    .catch((err) => {
-        console.error('Failed to start WebDriver:', err);
-        process.exit(1);
-    });
-
+// if on windows wait for message
+if (os.platform() === 'win32') {
+    waitForMessage(tauriDriver, 'Microsoft Edge WebDriver was started successfully.')
+        .then(() => {
+            console.log('WebDriver started successfully.');
+        })
+        .catch((err) => {
+            console.error('Failed to start WebDriver:', err);
+            process.exit(1);
+        });
+}
 // exit process after 5seconds
 setTimeout(() => {
     console.log("Timeout");
