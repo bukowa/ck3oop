@@ -49,8 +49,8 @@ tauri *ARGS:
 [doc('build the tauri app for testing')]
 tauri-b-for-tests:
     #!/bin/bash
-    if [ -n "$VERBOSE" ]; then set -x; fi
-    set -euo pipefail
+    if [ -n "$TRACE" ]; then set -x; fi
+    set -euov pipefail
     just tauri build --bundles=none
     test -f $PATH_TAURI_RELEASE_BINARY
 
@@ -78,7 +78,7 @@ webdriver-url:
 [windows]
 webdriver-download: init
     #!/bin/bash
-    if [ -n "$VERBOSE" ]; then set -x; fi
+    if [ -n "$TRACE" ]; then set -x; fi
     set -euo pipefail
 
     version=$(just browser-version)
@@ -110,7 +110,7 @@ webdriver-download: init
 [unix]
 webdriver-download:
     #!/bin/bash
-    if [ -n "$VERBOSE" ]; then set -x; fi
+    if [ -n "$TRACE" ]; then set -x; fi
     set -euo pipefail
     if [ -n "$PATH_WEBDRIVER_BINARY" ] && [ -f $PATH_WEBDRIVER_BINARY ]; then
         echo "Webdriver found at: '$PATH_WEBDRIVER_BINARY'"
@@ -164,6 +164,56 @@ clippy-fix extra="":
 fmt:
     cargo fmt --
 
+export RELEASE_PLEASE_REV := "ace2bd5dc778f83c33ad5dee6807db5d0afdba36"
+export RELEASE_PLEASE_TOKEN := env_var_or_default('RELEASE_PLEASE_TOKEN', '')
+
+[group('release')]
+[doc('cleans release-please dir')]
+[confirm]
+clean-release-please:
+    rm -rf .github/release-please
+
+[group('release')]
+[doc('pulls and builds release-please with patches')]
+build-release-please:
+    #!/bin/bash
+    if [ -n "$TRACE" ]; then set -x; fi
+    set -euov pipefail
+    cd .github/
+    # clone only if the directory doesn't exist
+    [ -d release-please ] || git clone git@github.com:googleapis/release-please.git
+    cd release-please
+    git checkout $RELEASE_PLEASE_REV
+    # apply patches only if they haven't been applied
+    patch_files=$(ls ../patches/release-please/**.patch)
+    for patch_file in "${patch_files[@]}"; do
+      if git apply --check $patch_file; then
+        git apply $patch_file
+      fi
+    done
+    npm install
+
+[group('release')]
+[doc('run PR with release-please')]
+release-please-pr:
+    #!/bin/bash
+    set -euov pipefail
+    # if token is not set, then exit
+    if [ -z "$RELEASE_PLEASE_TOKEN" ]; then
+      echo "RELEASE_PLEASE_TOKEN is not set"
+      exit 1
+    fi
+    cd .github/release-please
+    git checkout $RELEASE_PLEASE_REV
+    node ./build/src/bin/release-please.js release-pr \
+        --repo-url=https://github.com/bukowa/ck3oop \
+        --config-file=.github/release-please-config.json \
+        --manifest-file=.github/.release-please-manifest.json \
+        --token=$RELEASE_PLEASE_TOKEN \
+        --monorepo-tags
+
+[group('release')]
+[doc('mark correct release as latest')]
 release-mark-latest:
     #!/bin/bash
     release_id=$(
