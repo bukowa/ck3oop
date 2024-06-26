@@ -29,9 +29,27 @@ _:
     @just --list
 
 [group('setup')]
-[doc('print info about prerequisites for the project')]
+[doc('print info about prerequisites for the project to
+as a shortcut you can run: . <(just prerequisites)')]
+[unix]
 prerequisites:
-    @echo https://tauri.app/v1/guides/getting-started/prerequisites
+    #!/bin/bash
+    set -euo pipefail
+    echo $(cat <<EOF
+    sudo apt install libwebkit2gtk-4.0-dev \
+    build-essential \
+    curl \
+    wget \
+    file \
+    libssl-dev \
+    libgtk-3-dev \
+    libayatana-appindicator3-dev \
+    librsvg2-dev \
+    # webdriver \
+    xvfb \
+    webkit2gtk-driver xvfb
+    EOF
+    )
 
 [group('setup')]
 [doc('initialize the build tool')]
