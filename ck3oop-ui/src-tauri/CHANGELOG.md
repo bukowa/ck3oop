@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.0.4](https://github.com/bukowa/ck3oop/compare/ck3oop-ui-rs-v0.0.3...ck3oop-ui-rs-v0.0.4) (2024-06-26)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * ck3oop-core-rs bumped from 0.1.1 to 0.1.2
+
 ## [0.0.3](https://github.com/bukowa/ck3oop/compare/ck3oop-ui-rs-v0.0.2...ck3oop-ui-rs-v0.0.3) (2024-06-20)
 
 ### Dependencies
