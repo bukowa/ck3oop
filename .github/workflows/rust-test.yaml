@@ -30,7 +30,7 @@ jobs:
           cache-all-crates: true
           cache-targets: true
           cache-directories: |
-            .bin
+            .build
 
       - name: Install Tauri Dependencies (ubuntu only)
         run: |
