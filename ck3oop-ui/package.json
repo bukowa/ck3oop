@@ -1,7 +1,7 @@
 {
   "name": "ck3oop-ui-js",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1",
-    "ck3oop-core-js": "^0.0.0",
+    "ck3oop-core-js": "^0.1.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {

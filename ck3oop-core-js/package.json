@@ -2,7 +2,7 @@
   "name": "ck3oop-core-js",
   "type": "module",
   "main": "src/index.ts",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "build": "tsc",
     "build-incremental": "tsc --incremental",

@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.3](https://github.com/bukowa/ck3oop/compare/ck3oop-ui-v0.1.2...ck3oop-ui-v0.1.3) (2024-06-26)
+
+
+### Features
+
+* **core-rs:** Add ModLoadOrder ([0408801](https://github.com/bukowa/ck3oop/commit/0408801f3226e579461d6442b6a2c0d8b5fa3ea0))
+* **core-rs:** Add Workspace ([1e65c9b](https://github.com/bukowa/ck3oop/commit/1e65c9b254e86af91a77460bd9fa5cc9c4103507))
+* **tools:** Add `prerequisites` recipe to justfile ([e31e1c8](https://github.com/bukowa/ck3oop/commit/e31e1c824c40a813a888b10f487e916b7fd9af8c))
+* **tools:** Tests: add `incremental` build for faster testing ([ebfe136](https://github.com/bukowa/ck3oop/commit/ebfe136a5053768fee370a0c7fc0d6be8fe94aa3))
+
+
+### Bug Fixes
+
+* **tools:** Correct browser version check in justfile ([0b007b4](https://github.com/bukowa/ck3oop/commit/0b007b4cdb29229d53527554b3adbf7113047fd6))
+
 ## [0.1.2](https://github.com/bukowa/ck3oop/compare/ck3oop-ui-v0.1.1...ck3oop-ui-v0.1.2) (2024-06-20)
 
 
