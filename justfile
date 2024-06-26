@@ -23,6 +23,7 @@ export PATH_WEBDRIVER_BINARY := \
 
 #export PATH_WEBDRIVER_BINARY := PATH_BUILD_BIN + "/msedgedriver" + exe
 export PATH_TAURI_RELEASE_BINARY := absolute_path(".") / "target/release/ck3oop-ui" + exe
+export PATH_TAURI_DEBUG_BINARY := absolute_path(".") / "target/debug/ck3oop-ui" + exe
 
 # default target
 _:
@@ -64,13 +65,22 @@ tauri *ARGS:
     npm run --workspace=ck3oop-ui tauri -- {{ARGS}}
 
 [group('tauri')]
-[doc('build the tauri app for testing')]
+[doc('build the tauri app for testing in release mode')]
 tauri-b-for-tests:
     #!/bin/bash
     if [ -n "$TRACE" ]; then set -x; fi
     set -euov pipefail
     just tauri build --bundles=none
     test -f $PATH_TAURI_RELEASE_BINARY
+
+[group('tauri')]
+[doc('build the tauri app for testing in debug mode')]
+tauri-b-for-tests-debug:
+    #!/bin/bash
+    if [ -n "$TRACE" ]; then set -x; fi
+    set -euov pipefail
+    just tauri build --debug --bundles=none
+    test -f $PATH_TAURI_DEBUG_BINARY
 
 [group('webview')]
 [doc('downloads the tauri driver')]
@@ -138,7 +148,7 @@ webdriver-download:
     Error: Webdriver is not found at: '$PATH_WEBDRIVER_BINARY' (PATH_WEBDRIVER_BINARY).
     To download it, you can use the following commands:
       sudo apt update
-      sudo apt install webkit2gtk-driver -y
+      sudo apt install webkit2gtk-driver xvfb -y
     EOF
     )
           echo "$error_message"
@@ -166,6 +176,22 @@ test-e2e: webdriver-download tauri-driver-download
     just tauri-b-for-tests
     npm run --workspace=tests-e2e build
     npm run --workspace=tests-e2e run -- run
+
+[group('tests')]
+[doc('run tauri app')]
+run-tauri target="release":
+    #!/bin/bash
+    echo "Usage: just run-tauri <debug|release>"
+    if [ -n "$TRACE" ]; then set -x; fi
+    set -euo pipefail
+    if [ {{target}} == "release" ]; then
+        $PATH_TAURI_RELEASE_BINARY &
+    elif [ {{target}} == "debug" ]; then
+        $PATH_TAURI_DEBUG_BINARY &
+    else
+        echo "Unknown target: $target"
+        exit 1
+    fi
 
 npm-install:
     npm install --silent

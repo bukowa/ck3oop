@@ -49,7 +49,7 @@ jobs:
             .build
 
       - name: Setup Webdriver
-        run: sudo apt install -y webkit2gtk-driver
+        run: sudo apt install -y webkit2gtk-driver xvfb
 
       - name: Install Tauri Deps
         run: |
