@@ -48,22 +48,11 @@ jobs:
           cache-directories: |
             .build
 
-      - name: Setup Webdriver
-        run: sudo apt install -y webkit2gtk-driver xvfb
-
       - name: Install Tauri Deps
         run: |
           sudo apt update
-          sudo apt install libwebkit2gtk-4.0-dev \
-              build-essential \
-              curl \
-              wget \
-              file \
-              libssl-dev \
-              libgtk-3-dev \
-              libayatana-appindicator3-dev \
-              librsvg2-dev
+          . <(just prerequisites)
 
       - name: Run UI E2E tests
         run: |
-          just test-e2e
+          xvfb-run -a just test-e2e

@@ -10,11 +10,12 @@
   },
   "dependencies": {
     "commander": "^12.1.0",
+    "log4js": "^6.9.1",
     "selenium-webdriver": "^4.22.0"
   },
   "devDependencies": {
-    "@types/selenium-webdriver": "^4.1.23",
     "@types/node": "^20.14.8",
+    "@types/selenium-webdriver": "^4.1.23",
     "typescript": "^5.0.2"
   }
 }

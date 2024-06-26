@@ -37,7 +37,7 @@ prerequisites:
     #!/bin/bash
     set -euo pipefail
     echo $(cat <<EOF
-    sudo apt install libwebkit2gtk-4.0-dev \
+    sudo apt install -y libwebkit2gtk-4.0-dev \
     build-essential \
     curl \
     wget \
@@ -46,7 +46,6 @@ prerequisites:
     libgtk-3-dev \
     libayatana-appindicator3-dev \
     librsvg2-dev \
-    # webdriver \
     xvfb \
     webkit2gtk-driver xvfb
     EOF
@@ -158,7 +157,10 @@ webdriver-download:
 [group('tests')]
 [doc('run the e2e tests using ts-node and swc')]
 test-e2e-fast:
-    ts-node tests-e2e run
+    node \
+      --test --test-force-exit --test-timeout=20000 \
+      --require ts-node/register \
+      tests-e2e
 
 [group('tests')]
 [doc('builds ts projects with --incremental flag and runs e2e tests using ts-node and swc')]
@@ -167,7 +169,6 @@ test-e2e-fast-build:
     just tauri-b-for-tests
     just test-e2e-fast
 
-
 [group('tests')]
 [doc('run the e2e tests')]
 test-e2e: webdriver-download tauri-driver-download
@@ -175,7 +176,7 @@ test-e2e: webdriver-download tauri-driver-download
     npm run build
     just tauri-b-for-tests
     npm run --workspace=tests-e2e build
-    npm run --workspace=tests-e2e run -- run
+    node --test --test-force-exit --test-timeout=20000 tests-e2e/dist/main.js
 
 [group('tests')]
 [doc('run tauri app')]
@@ -268,6 +269,11 @@ release-mark-latest:
     # ask for confirmation
     read -p "Mark release $release_id as latest? [y/N] " -n 1 -r
     gh release edit $release_id --latest
+
+[group('debug')]
+[windows]
+wsl-restart:
+    wsl -d Ubuntu-20.04 --shutdown
 
 #[confirm]
 #cleanup-release-please:
