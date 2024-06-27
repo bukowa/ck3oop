@@ -16,16 +16,18 @@ export PATH := \
 
 export SOME_VAR := `echo ok`
 
-export PATH_TAURI_DRIVER_BINARY := PATH_BUILD_BIN / "tauri-driver-fork" + exe
+export PATH_TAURI_DRIVER_BINARY := env('PATH_TAURI_DRIVER_BINARY', PATH_BUILD_BIN / "tauri-driver-fork" + exe)
 # if we are on unix we need to get path to `WebKitWebDriver`
-export PATH_WEBDRIVER_BINARY := \
+export PATH_WEBDRIVER_BINARY := env('PATH_WEBDRIVER_BINARY', \
     if os() == 'windows' \
     {PATH_BUILD_BIN + "/msedgedriver" + exe } \
-    else { shell('which $1 || true', 'WebKitWebDriver')}
+    else { shell('which $1 || true', 'WebKitWebDriver')})
 
-#export PATH_WEBDRIVER_BINARY := PATH_BUILD_BIN + "/msedgedriver" + exe
-export PATH_TAURI_RELEASE_BINARY := absolute_path(".") / "target/release/ck3oop-ui" + exe
-export PATH_TAURI_DEBUG_BINARY := absolute_path(".") / "target/debug/ck3oop-ui" + exe
+export PATH_TAURI_RELEASE_BINARY := env('PATH_TAURI_RELEASE_BINARY', \
+    absolute_path(".") / "target/release/ck3oop-ui" + exe)
+
+export PATH_TAURI_DEBUG_BINARY := env('PATH_TAURI_DEBUG_BINARY', \
+    absolute_path(".") / "target/debug/ck3oop-ui" + exe)
 
 # default target
 _:
