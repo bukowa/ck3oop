@@ -121,11 +121,12 @@ describe('Tauri E2E tests', async () => {
         logger.info("running test.before")
         let application = program.opts()['tauri_app_binary'];
         const capabilities = new Capabilities()
+        // webkitgtk:browserOptions
         capabilities.set('tauri:options', {
             application: application,
             webviewOptions: {},
         })
-        capabilities.setBrowserName('wry')
+        capabilities.setBrowserName('')
         logger.info("Creating driver with", {capabilities: capabilities})
 
         driver = await new Builder()
