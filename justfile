@@ -1,6 +1,8 @@
 set shell := ["sh", "-c"]
 set windows-shell := ["sh", "-c"]
 
+export WEBKIT_DEBUG := "all"
+
 exe := if os() == 'windows' { ".exe" } else { "" }
 
 export PATH_BUILD_DIR := absolute_path(".build")
@@ -273,7 +275,7 @@ release-mark-latest:
 [group('debug')]
 [windows]
 wsl-restart:
-    wsl -d Ubuntu-20.04 --shutdown
+    wsl -d Ubuntu-22.04 --shutdown
 
 #[confirm]
 #cleanup-release-please:
