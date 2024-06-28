@@ -5,18 +5,20 @@ description = "A Tauri App"
 authors = ["you"]
 edition = "2021"
 publish = false
+default-run= "ck3oop-ui"
+
+[[bin]]
+name = "ck3oop-ui"
+path = "src/main.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1", features = [] }
+tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies]
-tauri = { version = "1", features = [ "window-show", "shell-open"] }
+tauri = { version = "2.0.0-beta", features = [] }
+tauri-plugin-shell = "2.0.0-beta"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 ck3oop-core-rs = { path = "../../ck3oop-core-rs", version = "0.1.2" }
-
-[features]
-# This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
-custom-protocol = ["tauri/custom-protocol"]

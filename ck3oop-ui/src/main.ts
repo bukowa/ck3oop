@@ -1,8 +1,13 @@
-import { createApp } from "vue";
+import {createApp} from "vue";
 import App from "./App.vue";
-import {appWindow} from "@tauri-apps/api/window";
+import {getCurrent} from "@tauri-apps/api/window";
 import {helloWorld} from "ck3oop-core-js";
 
 helloWorld("ck3oop-ui")
-createApp(App).mount("#app");
-appWindow.show().then(() => {});
+const app = createApp(App);
+
+app.mount("#app");
+
+setTimeout(() => {
+    getCurrent().show().then(() => {});
+}, 300);

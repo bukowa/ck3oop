@@ -41,15 +41,15 @@ prerequisites:
     #!/bin/bash
     set -euo pipefail
     echo $(cat <<EOF
-    sudo apt install -y libwebkit2gtk-4.0-dev \
+    sudo apt install libwebkit2gtk-4.1-dev \
     build-essential \
     curl \
     wget \
     file \
+    libxdo-dev \
     libssl-dev \
-    libgtk-3-dev \
     libayatana-appindicator3-dev \
-    librsvg2-dev \
+    librsvg2-dev
     xvfb \
     webkit2gtk-driver xvfb
     EOF
@@ -73,7 +73,7 @@ tauri-b-for-tests:
     #!/bin/bash
     if [ -n "$TRACE" ]; then set -x; fi
     set -euov pipefail
-    just tauri build --bundles=none
+    just tauri build --no-bundle
     test -f $PATH_TAURI_RELEASE_BINARY
 
 [group('tauri')]
@@ -82,7 +82,7 @@ tauri-b-for-tests-debug:
     #!/bin/bash
     if [ -n "$TRACE" ]; then set -x; fi
     set -euov pipefail
-    just tauri build --debug --bundles=none
+    just tauri build --debug --no-bundle
     test -f $PATH_TAURI_DEBUG_BINARY
 
 [group('webview')]

@@ -124,9 +124,16 @@ describe('Tauri E2E tests', async () => {
         // webkitgtk:browserOptions
         capabilities.set('tauri:options', {
             application: application,
+            // windows
             webviewOptions: {},
         })
-        capabilities.setBrowserName('')
+        // linux
+        capabilities.set('webkitgtk:browserOptions', {
+            args:[
+                '--automation'
+            ]
+        })
+        capabilities.setBrowserName('wry')
         logger.info("Creating driver with", {capabilities: capabilities})
 
         driver = await new Builder()
