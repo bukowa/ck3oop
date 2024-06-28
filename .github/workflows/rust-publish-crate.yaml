@@ -46,7 +46,7 @@ jobs:
           fetch-tags: true
 
       - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@21dc36fb71dd22e3317045c0c31a3f4249868b17 # v1
+        uses: dtolnay/rust-toolchain@1482605bfc5719782e1267fd0c0cc350fe7646b8 # v1
         with:
           toolchain: stable
 
