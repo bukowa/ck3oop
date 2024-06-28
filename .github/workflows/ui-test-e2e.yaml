@@ -53,15 +53,9 @@ jobs:
           sudo apt update
           . <(just prerequisites)
 
-      - name: Run UI E2E tests
-        continue-on-error: true
-        env:
-          NODE_TEST_TIMEOUT: 360000
-        run: |
-          just test-e2e
-
       - name: Run UI E2E tests with xvfb
+        uses: coactions/setup-xvfb@v1
         env:
           NODE_TEST_TIMEOUT: 360000
-        run: |
-          xvfb-run -a just test-e2e
+        with:
+          run: just test-e2e
