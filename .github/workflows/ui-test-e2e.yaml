@@ -54,7 +54,7 @@ jobs:
           . <(just prerequisites)
 
       - name: Run UI E2E tests with xvfb
-        uses: coactions/setup-xvfb@v1
+        uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3 # v1
         env:
           NODE_TEST_TIMEOUT: 360000
         with:
