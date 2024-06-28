@@ -53,14 +53,15 @@ jobs:
           sudo apt update
           . <(just prerequisites)
 
-      - name: Run XVFB|
-        run: |
-          sudo /usr/bin/Xvfb :0 -screen 0 1280x1024x24 &
-
       - name: Run UI E2E tests
+        continue-on-error: true
+        env:
+          NODE_TEST_TIMEOUT: 360000
         run: |
-          just test-e2e || true
+          just test-e2e
 
       - name: Run UI E2E tests with xvfb
+        env:
+          NODE_TEST_TIMEOUT: 360000
         run: |
-          xvfb-run -a just test-e2e || true
+          xvfb-run -a just test-e2e

@@ -158,11 +158,14 @@ webdriver-download:
           exit 1
     fi
 
+
+export NODE_TEST_TIMEOUT := env('NODE_TEST_TIMEOUT', '20000')
+
 [group('tests')]
 [doc('run the e2e tests using ts-node and swc')]
 test-e2e-fast:
     node \
-      --test --test-force-exit --test-timeout=20000 \
+      --test --test-force-exit --test-timeout=$NODE_TEST_TIMEOUT \
       --require ts-node/register \
       tests-e2e
 
@@ -180,7 +183,7 @@ test-e2e: webdriver-download tauri-driver-download
     npm run build
     just tauri-b-for-tests
     npm run --workspace=tests-e2e build
-    node --test --test-force-exit --test-timeout=20000 tests-e2e/dist/main.js
+    node --test --test-force-exit --test-timeout=$NODE_TEST_TIMEOUT tests-e2e/dist/main.js
 
 [group('tests')]
 [doc('run tauri app')]
