@@ -41,6 +41,7 @@ prerequisites:
     #!/bin/bash
     set -euo pipefail
     echo $(cat <<EOF
+    sudo apt update &&
     sudo apt install libwebkit2gtk-4.1-dev \
     build-essential \
     curl \
@@ -51,7 +52,7 @@ prerequisites:
     libayatana-appindicator3-dev \
     librsvg2-dev
     xvfb \
-    webkit2gtk-driver xvfb
+    webkit2gtk-driver
     EOF
     )
 

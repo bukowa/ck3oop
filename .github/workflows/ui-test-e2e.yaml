@@ -15,6 +15,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: "Run UI E2E tests"
+    env:
+      # xvfb is slow to start
+      NODE_TEST_TIMEOUT: 90000
 
     steps:
       - name: Checkout
@@ -31,9 +34,6 @@ jobs:
           node-version: 22.2.0
           cache: 'npm'
 
-      - name: Install Node Dependencies
-        run: npm install
-
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -48,14 +48,9 @@ jobs:
           cache-directories: |
             .build
 
-      - name: Install Tauri Deps
+      - name: Install Prerequisites
         run: |
-          sudo apt update
           . <(just prerequisites)
 
-      - name: Run UI E2E tests with xvfb
-        uses: coactions/setup-xvfb@b6b4fcfb9f5a895edadc3bc76318fae0ac17c8b3 # v1
-        env:
-          NODE_TEST_TIMEOUT: 360000
-        with:
-          run: just test-e2e
+      - name: Run UI E2E tests
+        run: xvfb-run -a just test-e2e
