@@ -14,5 +14,8 @@
     "ck3oop-core-js",
     "ck3oop-ui",
     "tests-e2e"
-  ]
+  ],
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  }
 }

@@ -17,9 +17,6 @@
     "mods",
     "crusader kings 3"
   ],
-  "devDependencies": {
-    "typescript": "^5.4.5"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bukowa/ck3oop.git",
