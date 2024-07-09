@@ -7,7 +7,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.3"
+version = "0.1.4"
 publish = false
 authors = ["ck3oop", "bukowa"]
 homepage = "https://github.com/bukowa/ck3oop"
