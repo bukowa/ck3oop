@@ -1,4 +1,4 @@
-export TAURI_BIN_NAME := "ck3oop-ui"
+export TAURI_BIN_NAME := "ck3oop-ui-rs"
 
 exe := if os() == 'windows' { ".exe" } else { "" }
 
