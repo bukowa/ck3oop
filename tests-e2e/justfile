@@ -25,12 +25,6 @@ run:
     just build
     just _runjs
 
-run_ci:
-    just ck3oop-ui::deps
-    just ck3oop-ui::tauri build
-    just build
-    just _runjs
-
 run-cmd := "node --test --test-force-exit --test-timeout $NODE_TEST_TIMEOUT"
 
 _runjs: build
