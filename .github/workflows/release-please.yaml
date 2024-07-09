@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
 
 name: "Release Please"
+env:
+  JUST_UNSTABLE: true
 
 jobs:
 

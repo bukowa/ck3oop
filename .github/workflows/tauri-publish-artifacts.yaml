@@ -21,6 +21,10 @@ on:
         type: string
         description: 'Tag of the release to publish'
         required: true
+
+env:
+  JUST_UNSTABLE: true
+
 jobs:
 
   publish-tauri:
@@ -31,12 +35,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          #          - platform: 'macos-latest' # for Arm based macs (M1 and above).
-          #            args: '--target aarch64-apple-darwin'
-          #          - platform: 'macos-latest' # for Intel based macs.
-          #            args: '--target x86_64-apple-darwin'
-          #          - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
-          #            args: ''
           - platform: 'windows-latest'
             args: ''
 
@@ -48,41 +46,20 @@ jobs:
         with:
           just-version: 1.29.0
 
-      - name: setup node
+      - name: Setup Node
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
         with:
           node-version: 22.2.0
           cache: 'npm'
 
-      - name: install Rust stable
+      - name: Install Rust Stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          toolchain: stable
 
-      - name: Setup Rust Cache
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84 # v2
-        with:
-          cache-all-crates: true
-          cache-targets: true
-          cache-directories: |
-            .build
-
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
+      - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
-        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
-        # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
-
-      - name: Install frontend dependencies
-        run: |
-          npm install --loglevel verbose
-
-      - name: Build workspace packages
-        run: |
-          npm run build
+          just prepare
 
       - uses: tauri-apps/tauri-action@b1dc93b31afa36b1247a7a5f55c2dffbdc70dd05 # v0.5.6
         env:
@@ -91,5 +68,5 @@ jobs:
           includeDebug: true
           tagName: ${{ inputs.tag }}
           releaseId: ${{ inputs.id }}
-          tauriScript: just tauri
+          tauriScript: just ck3oop-ui::tauri
           args: ${{ matrix.args }}

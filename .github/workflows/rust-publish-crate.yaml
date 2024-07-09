@@ -13,10 +13,6 @@ on:
         type: string
         description: 'Tag to publish'
         required: true
-    secrets:
-      RUST_CRATES_TOKEN:
-        description: 'Token for publishing Rust crates'
-        required: true
 
   workflow_call:
     inputs:
@@ -34,6 +30,9 @@ on:
         description: 'Token for publishing Rust crates'
         required: true
 
+env:
+  JUST_UNSTABLE: true
+
 jobs:
 
   publish-crates:
@@ -45,18 +44,10 @@ jobs:
           ref: ${{ inputs.tag }}
           fetch-tags: true
 
-      - name: Install Rust stable
+      - name: Install Rust Stable
         uses: dtolnay/rust-toolchain@21dc36fb71dd22e3317045c0c31a3f4249868b17 # v1
         with:
           toolchain: stable
-
-      - name: Setup Rust Cache
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84 # v2
-        with:
-          cache-all-crates: true
-          cache-targets: true
-          cache-directories: |
-            .build
 
       - name: Publish
         run: |

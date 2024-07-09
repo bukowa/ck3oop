@@ -10,6 +10,9 @@ on:
 
   pull_request:
 
+env:
+  JUST_UNSTABLE: true
+
 jobs:
 
   cargo-test:
@@ -18,6 +21,16 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
+      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Setup Just
         uses: extractions/setup-just@6e1de3cc407de738551abd6c0923bd5ed5608042
@@ -29,18 +42,9 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Setup Rust Cache
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84 # v2
-        with:
-          cache-all-crates: true
-          cache-targets: true
-          cache-directories: |
-            .build
-
-      - name: Install Tauri Dependencies (ubuntu only)
+      - name: Install Deps
         run: |
-          sudo apt update
-          . <(just prerequisites)
+          just prepare
 
       - name: Run Cargo Test
         run: |

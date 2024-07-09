@@ -10,6 +10,9 @@ on:
   workflow_call:
   workflow_dispatch:
 
+env:
+  JUST_UNSTABLE: true
+
 jobs:
 
   test:
@@ -18,10 +21,22 @@ jobs:
     env:
       # xvfb is slow to start
       NODE_TEST_TIMEOUT: 90000
+      NODE_TEST_LOGLEVEL: debug
+      TAURI_WEBDRIVER_LOGLEVEL: debug
 
     steps:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+
+      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Setup Just
         uses: extractions/setup-just@6e1de3cc407de738551abd6c0923bd5ed5608042
@@ -38,19 +53,8 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-          override: true
-
-      - name: Setup Rust Cache
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84 # v2
-        with:
-          cache-all-crates: true
-          cache-targets: true
-          cache-directories: |
-            .build
-
-      - name: Install Prerequisites
-        run: |
-          . <(just prerequisites)
 
       - name: Run UI E2E tests
-        run: xvfb-run -a just test-e2e
+        run: |
+          just prepare
+          xvfb-run -a just tests-e2e::run_ci

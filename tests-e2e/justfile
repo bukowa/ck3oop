@@ -1,0 +1,40 @@
+set shell := ["sh", "-c"]
+set windows-shell := ["sh", "-c"]
+
+_parent_dir := absolute_path(source_directory() + "/..")
+
+import '../ck3oop-ui/vars.just'
+mod ck3oop-ui '../ck3oop-ui/justfile'
+
+export TAURI_WEBDRIVER_LOGLEVEL := env("TAURI_WEBDRIVER_LOGLEVEL", "info")
+export NODE_TEST_LOGLEVEL := env("NODE_TEST_LOGLEVEL", "info")
+
+export SELENIUM_REMOTE_URL := "http://127.0.0.1:6566"
+export NODE_TEST_TIMEOUT := env("NODE_TEST_TIMEOUT", "30000")
+export TAURI_SELENIUM_BINARY := env("TAURI_SELENIUM_BINARY", PATH_RELEASE_BINARY)
+
+_:
+    @just --list --list-submodules
+
+build:
+    npm run build
+
+run:
+    just ck3oop-ui::deps
+    just ck3oop-ui::tauri build
+    just build
+    just _runjs
+
+run_ci:
+    just ck3oop-ui::deps
+    just ck3oop-ui::tauri build
+    just build
+    just _runjs
+
+run-cmd := "node --test --test-force-exit --test-timeout $NODE_TEST_TIMEOUT"
+
+_runjs:
+    {{run-cmd}} ./dist/main.js
+
+_runts:
+    {{run-cmd}} --import=tsimp/import ./src/main.ts

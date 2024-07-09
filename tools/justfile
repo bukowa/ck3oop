@@ -1,0 +1,7 @@
+set shell := ["sh", "-c"]
+set windows-shell := ["sh", "-c"]
+
+mod release-please './release-please.just'
+
+_:
+    just --list --list-submodules

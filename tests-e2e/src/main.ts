@@ -1,158 +1,44 @@
-import {spawn, spawnSync} from "child_process";
-import * as os from "node:os";
-import {program, Option} from "commander";
-import {Builder, Capabilities, ThenableWebDriver, WebDriver} from "selenium-webdriver";
+import * as e2e from "@tauri-e2e/selenium"
+import {default as log4js} from "log4js";
+import {after, before, describe, it, TestContext} from "node:test";
+import {until, WebDriver} from "selenium-webdriver";
 
-const log4js = require("log4js");
 const logger = log4js.getLogger();
+logger.level = process.env.NODE_TEST_LOGLEVEL || 'info';
+e2e.setLogger(logger)
 
-logger.level = 'debug';
+await e2e.launch.spawnWebDriver({
+    path: await e2e.install.PlatformDriver(),
+})
 
-(() => {
-    program.addOption(
-        new Option(
-            "-t, --tauri_app_binary <path>",
-            "Path to the tauri app binary")
-            .env("PATH_TAURI_RELEASE_BINARY")
-    )
+await new Promise(r => setTimeout(r, 1000))
 
-    program.addOption(
-        new Option(
-            "-d, --tauri_driver_binary <path>",
-            "Path to the tauri driver binary")
-            .env("PATH_TAURI_DRIVER_BINARY")
-    )
+type SuiteContext = any; // Define this according to your actual SuiteContext type
+type SuiteWrapperFn = (t: TestContext, driver: WebDriver) => void | Promise<void>;
 
-    program.addOption(
-        new Option(
-            "-w, --webdriver_binary <path>",
-            "Path to the webdriver binary")
-            .env("PATH_WEBDRIVER_BINARY")
-    )
+function describeWithDriver(name: string, action: SuiteWrapperFn) {
+    return describe(name, function (sctx: SuiteContext) {
+        let driver: WebDriver;
 
-    program.parse(process.argv);
-})()
-
-
-function waitForMessage(process: any, message: any) {
-
-    return new Promise((resolve: any, reject) => {
-        process.stdout.on('data', (data: any) => {
-            const output = data.toString();
-            logger.info(output);
-            if (output.includes(message)) {
-                resolve();
-            }
+        before(async () => {
+            driver = new e2e.selenium.Builder().build();
+            await driver.wait(until.elementLocated({tagName: 'body'}));
         });
 
-        process.stderr.on('data', (data: any) => {
-            console.error(data.toString());
+        after(async () => {
+            await e2e.selenium.cleanupSession(driver);
         });
 
-        process.on('error', (err: any) => {
-            console.error(err);
-            reject(err);
+        it('With fresh driver session', async function (tctx: TestContext) {
+            await action(tctx, driver);
         });
 
-        process.on('exit', (code: any) => {
-            if (code !== 0) {
-                reject(new Error(`Process exited with code: ${code}`));
-            }
-        });
     });
 }
 
-let tauriDriver = spawn(
-    program.opts()['tauri_driver_binary'],
-    [
-        "--native-host", "127.0.0.1",
-        "--native-driver", program.opts()['webdriver_binary'],
-        "--native-port", "7653",
-        "--port", "7654"
-    ],
-    {
-        stdio: [null, "pipe", "pipe"],
-        detached: false
-    }
-)
+// Example usage
+await describeWithDriver("Tauri E2E tests", async (tctx, driver) => {
+    await tctx.test("should open the app", async () => {
 
-// if on windows wait for message
-if (os.platform() === 'win32') {
-    waitForMessage(tauriDriver, 'Microsoft Edge WebDriver was started successfully.')
-        .then(() => {
-            logger.info('WebDriver started successfully.');
-        })
-        .catch((err) => {
-            console.error('Failed to start WebDriver:', err);
-            process.exit(1);
-        });
-}
-
-const start = new Date().getTime();
-// tests should finish in 10 seconds
-// setTimeout(() => {
-//     const end = new Date().getTime();
-//     console.error(`Tests took too long to run: ${end - start}ms`);
-//     process.exit(1);
-// }, 25000)
-
-import {after, before, describe, it} from "node:test";
-import * as util from "node:util";
-
-let driver: WebDriver;
-
-describe('Tauri E2E tests', async () => {
-    before(async () => {
-        process.on('exit', (code) => {
-          logger.info(`About to exit with code: ${code}`);
-          try {
-            logger.info("Closing driver")
-            driver.quit();
-          } catch (e) {
-            logger.error("Error closing driver", e)
-          }
-          try {
-            logger.info("Killing tauri driver")
-            tauriDriver.kill()
-          } catch (e) {
-            logger.error("Error killing tauri driver", e)
-          }
-        })
-        logger.info("running test.before")
-        let application = program.opts()['tauri_app_binary'];
-        const capabilities = new Capabilities()
-        // webkitgtk:browserOptions
-        capabilities.set('tauri:options', {
-            application: application,
-            // windows
-            webviewOptions: {},
-        })
-        // linux
-        capabilities.set('webkitgtk:browserOptions', {
-            args:[
-                '--automation'
-            ]
-        })
-        capabilities.setBrowserName('wry')
-        logger.info("Creating driver with", {capabilities: capabilities})
-
-        driver = await new Builder()
-            .withCapabilities(capabilities)
-            .usingServer('http://127.0.0.1:7654')
-            .build()
-
-        logger.info("Driver created", {driver: driver})
-    })
-
-    after(async () => {
     });
-
-    it('should send hello world', async()=>{
-        logger.info("Running tests")
-        logger.info(`this is driver: ${driver}`)
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        await driver.findElement({
-            css: 'input[id="greet-input"]'
-        }).sendKeys('Hello World');
-    })
 });

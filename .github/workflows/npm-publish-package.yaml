@@ -30,16 +30,25 @@ on:
         description: 'Token for publishing NPM packages'
         required: true
 
+env:
+  JUST_UNSTABLE: true
+
 jobs:
 
   publish-npm-package:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
         with:
           ref: ${{ inputs.tag }}
           fetch-tags: true
+
+      - name: Setup Just
+        uses: extractions/setup-just@6e1de3cc407de738551abd6c0923bd5ed5608042
+        with:
+          just-version: 1.29.0
 
       - name: Setup Node
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
@@ -52,11 +61,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --loglevel verbose
-
-      - name: Build Package
-        run: |
-          npm run build:${{ inputs.package }}
+          just prepare
 
       - name: Publish Package
         run: |

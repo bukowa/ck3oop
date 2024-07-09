@@ -1,0 +1,62 @@
+set shell := ["sh", "-c"]
+set windows-shell := ["sh", "-c"]
+deps_file := '.deps.once'
+
+import './vars.just'
+
+run target='release':
+    # use xargs to handle arguments with spaces or special
+    # characters uniformly across Windows and Linux.
+    # this (hopefully) ensures some compatibility in cross-platform scripts.
+    "{{ if target == 'release' { PATH_RELEASE_BINARY} else { PATH_DEBUG_BINARY } }}" | xargs &
+
+tauri *ARGS:
+    npm run tauri -- {{ARGS}}
+
+build *ARGS: deps
+    just tauri build {{ARGS}}
+
+dev:
+    npm run dev
+
+clean:
+    rm -fr {{deps_file}}
+    rm -fr node_modules
+    rm -fr dist
+
+[linux]
+deps:
+    #!/bin/bash
+    set -euo pipefail
+
+    if [ -f {{deps_file}} ]; then
+        echo "Dependencies already installed"
+        exit 0
+    fi
+    set -euo pipefail
+    sudo apt update
+    sudo apt install -y libwebkit2gtk-4.1-dev \
+    build-essential \
+    curl \
+    wget \
+    file \
+    libxdo-dev \
+    libssl-dev \
+    libayatana-appindicator3-dev \
+    librsvg2-dev \
+    xvfb \
+    webkit2gtk-driver
+    touch {{deps_file}}
+
+[windows]
+deps:
+    #!/bin/bash
+    set -euo pipefail
+
+    if [ -f {{deps_file}} ]; then
+        echo "Dependencies already installed"
+        exit 0
+    fi
+    echo "https://v2.tauri.app/start/prerequisites/#windows"
+    echo "https://stackoverflow.com/questions/62551793/how-to-automate-from-command-line-the-installation-of-a-visual-studio-build-to"
+    touch {{deps_file}}

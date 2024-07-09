@@ -10,3 +10,5 @@ target
 .bin
 .build
 tsconfig.tsbuildinfo
+.deps.once
+.tsimp

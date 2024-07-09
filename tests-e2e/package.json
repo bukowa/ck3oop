@@ -3,19 +3,18 @@
   "version": "0.0.0",
   "main": "src/main.ts",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "tsc",
-    "build-incremental": "tsc --incremental",
-    "run": "node dist/main.js"
+    "build": "tsc"
   },
   "dependencies": {
-    "commander": "^12.1.0",
     "log4js": "^6.9.1",
-    "selenium-webdriver": "^4.22.0"
+    "selenium-webdriver": "^4.22.0",
+    "@tauri-e2e/selenium": "^0.2.0"
   },
   "devDependencies": {
-    "@tauri-e2e/selenium": "^0.2.0",
     "@types/node": "^20.14.8",
-    "@types/selenium-webdriver": "^4.1.23"
+    "@types/selenium-webdriver": "^4.1.23",
+    "tsimp": "^2.0.11"
   }
 }
