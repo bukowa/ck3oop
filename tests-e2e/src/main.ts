@@ -2,6 +2,7 @@ import * as e2e from "@tauri-e2e/selenium"
 import {default as log4js} from "log4js";
 import {after, before, describe, it, TestContext} from "node:test";
 import {until, WebDriver} from "selenium-webdriver";
+import assert from "node:assert";
 
 const logger = log4js.getLogger();
 logger.level = process.env.NODE_TEST_LOGLEVEL || 'info';
@@ -17,7 +18,7 @@ type SuiteContext = any; // Define this according to your actual SuiteContext ty
 type SuiteWrapperFn = (t: TestContext, driver: WebDriver) => void | Promise<void>;
 
 function describeWithDriver(name: string, action: SuiteWrapperFn) {
-    return describe(name, function (sctx: SuiteContext) {
+    return describe(name, async function (sctx: SuiteContext) {
         let driver: WebDriver;
 
         before(async () => {
@@ -37,8 +38,21 @@ function describeWithDriver(name: string, action: SuiteWrapperFn) {
 }
 
 // Example usage
-await describeWithDriver("Tauri E2E tests", async (tctx, driver) => {
-    await tctx.test("should open the app", async () => {
+describeWithDriver("Tauri E2E tests", async (tctx, driver) => {
+    await tctx.test("should send hello world", async () => {
+        let input = 'input[id="greet-input"]'
+        let button = 'button[type="Submit"]'
+        let text = 'p[id="greet-msg"]'
 
+        await driver.wait(until.elementLocated({css: input}));
+        await driver.findElement({css: input}).sendKeys('Hello World');
+
+        await driver.wait(until.elementLocated({css: button}));
+        await driver.findElement({css: button}).click();
+        await driver.wait(until.elementLocated({css: text}));
+        const helloWorldText = await driver.findElement({css: text}).getText()
+
+        assert.equal(helloWorldText, "Hello, Hello World! You've been greeted from Rust!")
+        logger.info("Hello World sent successfully")
     });
 });

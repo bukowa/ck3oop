@@ -33,7 +33,7 @@ run_ci:
 
 run-cmd := "node --test --test-force-exit --test-timeout $NODE_TEST_TIMEOUT"
 
-_runjs:
+_runjs: build
     {{run-cmd}} ./dist/main.js
 
 _runts:

@@ -19,8 +19,8 @@ deps:
     just ck3oop-ui::deps
 
 test:
-    cargo test
     just deps
+    cargo test
     npm run build
     just tests-e2e::run
 

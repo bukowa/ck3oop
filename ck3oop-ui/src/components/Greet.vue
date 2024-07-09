@@ -17,5 +17,5 @@ async function greet() {
     <button type="submit">Greet</button>
   </form>
 
-  <p>{{ greetMsg }}</p>
+  <p id="greet-msg">{{ greetMsg }}</p>
 </template>
